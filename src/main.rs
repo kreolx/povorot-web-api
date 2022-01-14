@@ -55,7 +55,6 @@ async fn prices() -> impl IntoResponse {
 async fn empty_slots(Json(payload): Json<EmptySlotRequest>) -> impl IntoResponse {
     let date = DateTime::parse_from_rfc3339(&payload.date).unwrap();
     let mut con = connect().unwrap();
-    println!("Date is {}", date.format("%d.%m.%Y"));
     let slots: Vec<String> = con.lrange(date.format("%d.%m.%Y").to_string(), 0, -1).unwrap();
     (StatusCode::OK, Json(slots))
 }
@@ -67,7 +66,10 @@ async fn create_save_request(Json(payload): Json<SaveRequest>) -> impl IntoRespo
     .unwrap();
     let channel = conn.create_channel().await.unwrap();
     let _queue = channel.queue_declare("save-requests", QueueDeclareOptions::default(),
-FieldTable::default()).await.unwrap();
+        FieldTable::default())
+        .await
+        .unwrap();
+
     let js = serde_json::to_string(&payload).unwrap();
     let _confirm = channel.basic_publish("", "save-requests",
     BasicPublishOptions::default(),
