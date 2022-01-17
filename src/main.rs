@@ -2,10 +2,10 @@ use axum::{
     http::{StatusCode},
     response::IntoResponse,
     routing::{get, post},
-    Json,Router
+    Json,Router,
+    extract::Query
 };
 
-use http::{Method};
 use redis::{Commands,RedisError};
 use serde::{Deserialize, Serialize};
 use std::{net::SocketAddr,env};
@@ -61,7 +61,7 @@ async fn prices() -> impl IntoResponse {
     (StatusCode::OK, Json(prices))
 }
 
-async fn empty_slots(Json(payload): Json<EmptySlotRequest>) -> impl IntoResponse {
+async fn empty_slots(payload: Query<EmptySlotRequest>) -> impl IntoResponse {
     let date = DateTime::parse_from_rfc3339(&payload.date).unwrap();
     let mut con = connect().unwrap();
     let slots: Vec<String> = con.lrange(date.format("%d.%m.%Y").to_string(), 0, -1).unwrap();
