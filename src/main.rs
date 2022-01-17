@@ -14,7 +14,7 @@ use lapin::{
     options::*, types::FieldTable, BasicProperties, Connection,
     ConnectionProperties,
 };
-use tower_http::cors::{CorsLayer, Origin};
+use tower_http::cors::{CorsLayer, Origin, any};
 
 const REDIS_CON_STRING: &str = "REDIS_CON_STRING";
 const RABBIT_CON_STRING: &str = "RABBIT_CON_STRING";
@@ -22,8 +22,10 @@ const RABBIT_CON_STRING: &str = "RABBIT_CON_STRING";
 #[tokio::main]
 async fn main() {
     let cors = CorsLayer::new()
-        .allow_origin(Origin::exact("http://povorot27.ru/".parse().unwrap()))
-        .allow_methods(vec![Method::GET, Method::POST]);
+        .allow_origin(Origin::exact("http://povorot27.ru".parse().unwrap()))
+        .allow_headers(any())
+        .allow_credentials(true)
+        .allow_methods(any());
 
     let app = Router::new()
     .route("/price", get(prices)).layer(&cors)
