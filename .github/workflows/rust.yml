@@ -23,5 +23,6 @@ jobs:
           script: |
             cd /var/opt/povorot-web-api
             git pull
-            docker build -t povorot-web-api .
-            docker run -p 3000:3000 povorot-web-api
+            docker-compose down
+            docker-compose build
+            docker-compose up -d
