@@ -4,6 +4,8 @@ use axum::{
     routing::{get, post},
     Json,Router
 };
+use axum_cors::*;
+use http::{header, Method};
 use redis::{Commands,RedisError};
 use serde::{Deserialize, Serialize};
 use std::{net::SocketAddr,env};
@@ -12,16 +14,21 @@ use lapin::{
     options::*, types::FieldTable, BasicProperties, Connection,
     ConnectionProperties,
 };
+use tower_http::cors::{CorsLayer, Origin};
 
 const REDIS_CON_STRING: &str = "REDIS_CON_STRING";
 const RABBIT_CON_STRING: &str = "RABBIT_CON_STRING";
 
 #[tokio::main]
 async fn main() {
+    let cors = CorsLayer::new()
+        .allow_origin(Origin::exact("http://povorot27.ru".parse().unwrap()))
+        .allow_methods(vec![Method::GET, Method::POST]);
+
     let app = Router::new()
-    .route("/price", get(prices))
-    .route("/requests", get(empty_slots))
-    .route("/requests", post(create_save_request));
+    .route("/price", get(prices)).layer(&cors)
+    .route("/requests", get(empty_slots)).layer(&cors)
+    .route("/requests", post(create_save_request)).layer(&cors);
 
     let addr = SocketAddr::from(([0,0,0,0], 8080));
     println!("listening on {}", addr);
