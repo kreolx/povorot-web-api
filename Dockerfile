@@ -14,7 +14,10 @@ RUN apt-get update \
     && apt-get install -y libssl-dev pkg-config build-essential
 
 ENV TZ=Etc/UTC \
-    APP_USER=appuser
+    APP_USER=appuser \
+    REDIS_CON_STRING=redis \
+    RABBIT_CON_STRING=rabbitmq
+
 
 RUN groupadd $APP_USER \
     && useradd -g $APP_USER $APP_USER \
