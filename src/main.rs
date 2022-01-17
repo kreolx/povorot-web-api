@@ -4,8 +4,8 @@ use axum::{
     routing::{get, post},
     Json,Router
 };
-use axum_cors::*;
-use http::{header, Method};
+
+use http::{Method};
 use redis::{Commands,RedisError};
 use serde::{Deserialize, Serialize};
 use std::{net::SocketAddr,env};
