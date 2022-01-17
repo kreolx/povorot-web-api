@@ -22,7 +22,7 @@ const RABBIT_CON_STRING: &str = "RABBIT_CON_STRING";
 #[tokio::main]
 async fn main() {
     let cors = CorsLayer::new()
-        .allow_origin(Origin::exact("http://povorot27.ru".parse().unwrap()))
+        .allow_origin(Origin::exact("http://povorot27.ru/".parse().unwrap()))
         .allow_methods(vec![Method::GET, Method::POST]);
 
     let app = Router::new()
