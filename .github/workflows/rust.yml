@@ -21,7 +21,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /var/opt/rust-povorot-api
+            cd /var/opt/povorot-web-api
             git pull
-            docker build -t rust-povorot-api .
-            docker run -p 3000:3000 rust-povorot-api
+            docker build -t povorot-web-api .
+            docker run -p 3000:3000 povorot-web-api
